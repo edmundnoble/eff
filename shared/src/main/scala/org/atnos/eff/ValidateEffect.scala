@@ -31,6 +31,10 @@ trait ValidateCreation {
   def validateEither[R, E, A](either: E Either A)(implicit m: Validate[E, ?] |= R): Eff[R, Unit] =
     either.fold(e => wrong(e), _ => correct(()))
 
+  /** create an Validate effect from a single Either value */
+  def validateValidated[R, E, A](validated: E Validated A)(implicit m: Validate[E, ?] |= R): Eff[R, Unit] =
+    validated.fold(e => wrong(e), _ => correct(()))
+
   /** create a failed value */
   def wrong[R, E](e: E)(implicit m: Validate[E, ?] |= R): Eff[R, Unit] =
     send[Validate[E, ?], R, Unit](Wrong(e))
