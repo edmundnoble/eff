@@ -29,7 +29,7 @@ lazy val monix = crossProject.crossType(CrossType.Full).in(file("monix"))
   .dependsOn(core)
   .settings(libraryDependencies ++= monixEval)
   .settings(effSettings:_*)
-  .jvmSettings(commonJvmSettings:_*)
+  .jvmSettings(commonJvmSettings ++ Seq(libraryDependencies ++= scalameter, testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework")):_*)
   .jsSettings(commonJsSettings ++ Seq(libraryDependencies ++= monixJs):_*)
 
 lazy val monixJVM = monix.jvm
