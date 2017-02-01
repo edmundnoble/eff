@@ -21,6 +21,11 @@ object EffBenchmark extends Bench.OfflineReport {
     delay(v)
 
   performance of "send" in {
+    measure method "control" in {
+      using(lists) in { list =>
+        list.traverse(Eval.later(_)).value
+      }
+    }
     measure method "simple send" in {
       using(lists) in { list =>
         run(runEval(list.traverse(a => simpleSend[E, Int](a))))
