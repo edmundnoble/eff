@@ -17,12 +17,18 @@ lazy val eff = project.in(file("."))
 lazy val core = crossProject.crossType(CrossType.Full).in(file("."))
   .settings(moduleName := "eff")
   .jsSettings(commonJsSettings:_*)
-  .jvmSettings(commonJvmSettings ++ Seq(libraryDependencies ++= scalameter):_*)
+  .jvmSettings(commonJvmSettings:_*)
   .jvmSettings(promulgate.library("org.atnos.eff", "eff"):_*)
   .settings(effSettings:_*)
 
 lazy val coreJVM = core.jvm
 lazy val coreJS = core.js
+
+lazy val bench = project.in(file("bench"))
+  .dependsOn(coreJVM)
+  .settings(moduleName := "bench")
+  .settings(commonJvmSettings ++ Seq(libraryDependencies ++= scalameter, testFrameworks := Seq(new TestFramework("org.scalameter.ScalaMeterFramework"))):_*)
+  .settings(effSettings:_*)
 
 lazy val monix = crossProject.crossType(CrossType.Full).in(file("monix"))
   .settings(moduleName := "eff-monix")

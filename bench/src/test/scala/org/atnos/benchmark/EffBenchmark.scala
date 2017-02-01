@@ -11,7 +11,7 @@ import org.scalameter.picklers.Implicits._
 object EffBenchmark extends Bench.OfflineReport {
   type E = Fx.fx1[Eval]
 
-  val sizes = Gen.enumeration("size")(10, 100, 1000, 10000, 100000)
+  val sizes = Gen.enumeration("size")(10, 100, 1000)
 
   val lists = for {
     size <- sizes
@@ -19,7 +19,6 @@ object EffBenchmark extends Bench.OfflineReport {
 
   def simpleSend[R, V](v: =>V)(implicit m: Member[Eval, R]) =
     delay(v)
-
 
   performance of "send" in {
     measure method "simple send" in {
