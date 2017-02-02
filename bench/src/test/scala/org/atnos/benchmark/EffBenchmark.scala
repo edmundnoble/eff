@@ -11,7 +11,7 @@ import org.scalameter.picklers.Implicits._
 object EffBenchmark extends Bench.OfflineReport {
   type E = Fx.fx1[Eval]
 
-  val sizes = Gen.enumeration("size")(10, 100, 1000)
+  val sizes = Gen.enumeration("size")(10, 100, 1000, 40000)
 
   val vectors = for {
     size <- sizes
