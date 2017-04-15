@@ -32,8 +32,18 @@ trait TaskCreation extends TaskTypes {
   final def taskForkScheduler[R :_task, A](call: Task[A], scheduler: Scheduler, timeout: Option[FiniteDuration] = None): Eff[R, A] =
     fromTask(Task.fork(call, scheduler), timeout)
 
+  final def taskForkProgramScheduler[R :_Task, A](call: Eff[R, A], scheduler: Scheduler, timeout: Option[FiniteDuration] = None): Eff[R, A] =
+    interpret.interceptNat(call)(new (Task ~> Task) {
+      def apply[X](fa: Task[X]): Task[X] = Task.fork(fa, scheduler)
+    })
+
   final def taskFork[R :_task, A](call: Task[A], timeout: Option[FiniteDuration] = None): Eff[R, A] =
     fromTask(Task.fork(call), timeout)
+
+  final def taskForkProgram[R :_Task, A](call: Eff[R, A], timeout: Option[FiniteDuration] = None): Eff[R, A] =
+    interpret.interceptNat(call)(new (Task ~> Task) {
+      def apply[X](fa: Task[X]): Task[X] = Task.fork(fa)
+    })
 
   final def taskAsync[R :_task, A](callbackConsumer: ((Throwable Either A) => Unit) => Unit,
                                    timeout: Option[FiniteDuration] = None): Eff[R, A] = {
